@@ -110,7 +110,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
                         type = 'table' AND
                         name = %s AND
                         sql LIKE %s
-                """,
+                    """,
                     [table_name, json_constraint_sql],
                 ).fetchone()
                 if has_json_constraint:
@@ -282,7 +282,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         # https://www.sqlite.org/syntaxdiagrams.html#table-constraint
         statement = sqlparse.parse(sql)[0]
         constraints = {}
-        unnamed_constrains_index = 0
+        unnamed_constraints_index = 0
         tokens = (token for token in statement.flatten() if not token.is_whitespace)
         # Go to columns and constraint definition
         for token in tokens:
@@ -300,17 +300,17 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
                 if constraint_name:
                     constraints[constraint_name] = unique
                 else:
-                    unnamed_constrains_index += 1
+                    unnamed_constraints_index += 1
                     constraints[
-                        "__unnamed_constraint_%s__" % unnamed_constrains_index
+                        f"__unnamed_constraint_{unnamed_constraints_index}__"
                     ] = unique
             if check:
                 if constraint_name:
                     constraints[constraint_name] = check
                 else:
-                    unnamed_constrains_index += 1
+                    unnamed_constraints_index += 1
                     constraints[
-                        "__unnamed_constraint_%s__" % unnamed_constrains_index
+                        f"__unnamed_constraint_{unnamed_constraints_index}__"
                     ] = check
             if end_token.match(sqlparse.tokens.Punctuation, ")"):
                 break
@@ -339,7 +339,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
 
         # Get the index info
         cursor.execute(
-            "PRAGMA index_list(%s)" % self.connection.ops.quote_name(table_name)
+            f"PRAGMA index_list({self.connection.ops.quote_name(table_name)})"
         )
         for row in cursor.fetchall():
             # SQLite 3.8.9+ has 5 columns, however older versions only give 3
@@ -362,7 +362,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
                 continue
             # Get the index info for that index
             cursor.execute(
-                "PRAGMA index_info(%s)" % self.connection.ops.quote_name(index)
+                f"PRAGMA index_info({self.connection.ops.quote_name(index)})"
             )
             for index_rank, column_rank, column in cursor.fetchall():
                 if index not in constraints:
@@ -427,7 +427,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
             SELECT sql
             FROM sqlite_master
             WHERE type = 'table' AND name = %s
-        """,
+            """,
             [table_name],
         ).fetchone()
         if not row:

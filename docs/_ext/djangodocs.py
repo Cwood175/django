@@ -256,14 +256,12 @@ def visit_console_html(self, node):
         self.document._console_directive_used_flag = True
         uid = node["uid"]
         self.body.append(
-            """\
-<div class="console-block" id="console-block-%(id)s">
-<input class="c-tab-unix" id="c-tab-%(id)s-unix" type="radio" name="console-%(id)s" \
-checked>
-<label for="c-tab-%(id)s-unix" title="Linux/macOS">&#xf17c/&#xf179</label>
-<input class="c-tab-win" id="c-tab-%(id)s-win" type="radio" name="console-%(id)s">
-<label for="c-tab-%(id)s-win" title="Windows">&#xf17a</label>
-<section class="c-content-unix" id="c-content-%(id)s-unix">\n"""
+            '<div class="console-block" id="console-block-%(id)s">\n'
+            '<input class="c-tab-unix" id="c-tab-%(id)s-unix" type="radio" name="console-%(id)s" checked>\n'
+            '<label for="c-tab-%(id)s-unix" title="Linux/macOS">&#xf17c/&#xf179</label>\n'
+            '<input class="c-tab-win" id="c-tab-%(id)s-win" type="radio" name="console-%(id)s">\n'
+            '<label for="c-tab-%(id)s-win" title="Windows">&#xf17a</label>\n'
+            '<section class="c-content-unix" id="c-content-%(id)s-unix">\n'
             % {"id": uid}
         )
         try:

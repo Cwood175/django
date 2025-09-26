@@ -409,7 +409,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
                        @@sql_auto_is_null,
                        @@lower_case_table_names,
                        CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
-            """
+                """
             )
             row = cursor.fetchone()
         return {

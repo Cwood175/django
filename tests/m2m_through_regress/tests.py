@@ -84,12 +84,7 @@ class M2MThroughSerializationTestCase(TestCase):
         )
         self.assertJSONEqual(
             out.getvalue().strip(),
-            '[{"pk": %(m_pk)s, "model": "m2m_through_regress.membership", '
-            '"fields": {"person": %(p_pk)s, "price": 100, "group": %(g_pk)s}}, '
-            '{"pk": %(p_pk)s, "model": "m2m_through_regress.person", '
-            '"fields": {"name": "Bob"}}, '
-            '{"pk": %(g_pk)s, "model": "m2m_through_regress.group", '
-            '"fields": {"name": "Roll"}}]' % pks,
+            '[{"pk": %(m_pk)s, "model": "m2m_through_regress.membership", "fields": {"person": %(p_pk)s, "price": 100, "group": %(g_pk)s}}, {"pk": %(p_pk)s, "model": "m2m_through_regress.person", "fields": {"name": "Bob"}}, {"pk": %(g_pk)s, "model": "m2m_through_regress.group", "fields": {"name": "Roll"}}]' % pks,
         )
 
         out = StringIO()
@@ -98,8 +93,7 @@ class M2MThroughSerializationTestCase(TestCase):
         )
         self.assertXMLEqual(
             out.getvalue().strip(),
-            """
-<?xml version="1.0" encoding="utf-8"?>
+            """<?xml version="1.0" encoding="utf-8"?>
 <django-objects version="1.0">
   <object pk="%(m_pk)s" model="%(app_label)s.membership">
     <field to="%(app_label)s.person" name="person" rel="ManyToOneRel">%(p_pk)s</field>
@@ -113,8 +107,7 @@ class M2MThroughSerializationTestCase(TestCase):
     <field type="CharField" name="name">Roll</field>
   </object>
 </django-objects>
-        """.strip()
-            % pks,
+        """.strip() % pks,
         )
 
 

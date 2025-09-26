@@ -15,7 +15,8 @@ class SplitHiddenDateTimeWidgetTest(WidgetTest):
             "date",
             "",
             html=(
-                '<input type="hidden" name="date_0"><input type="hidden" name="date_1">'
+                '<input type="hidden" name="date_0">'
+                '<input type="hidden" name="date_1">'
             ),
         )
 
@@ -57,10 +58,8 @@ class SplitHiddenDateTimeWidgetTest(WidgetTest):
             "date",
             d,
             html=(
-                """
-            <input type="hidden" name="date_0" value="17.09.2007">
-            <input type="hidden" name="date_1" value="12:51:00">
-            """
+                '<input type="hidden" name="date_0" value="17.09.2007">'
+                '<input type="hidden" name="date_1" value="12:51:00">'
             ),
         )
 

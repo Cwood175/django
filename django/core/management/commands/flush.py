@@ -10,7 +10,7 @@ from django.db import DEFAULT_DB_ALIAS, connections
 class Command(BaseCommand):
     help = (
         "Removes ALL DATA from the database, including data added during "
-        'migrations. Does not achieve a "fresh install" state.'
+        "migrations. Does not achieve a \"fresh install\" state."
     )
     stealth_options = ("reset_sequences", "allow_cascade", "inhibit_post_migrate")
 
@@ -58,13 +58,13 @@ class Command(BaseCommand):
 
         if interactive:
             confirm = input(
-                """You have requested a flush of the database.
-This will IRREVERSIBLY DESTROY all data currently in the "%s" database,
-and return each table to an empty state.
-Are you sure you want to do this?
-
-    Type 'yes' to continue, or 'no' to cancel: """
-                % connection.settings_dict["NAME"]
+                "You have requested a flush of the database.\n"
+                "This will IRREVERSIBLY DESTROY all data currently in the "
+                f"{connection.settings_dict['NAME']}\" database,\n"
+                "and return each table to an empty state.\n"
+                "Are you sure you want to do this?\n"
+                "\n"
+                "    Type 'yes' to continue, or 'no' to cancel: "
             )
         else:
             confirm = "yes"

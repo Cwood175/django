@@ -501,7 +501,8 @@ class URLTagTests(URLTestCaseBase):
             {% language lang2 %}{% url 'no-prefix-translated' %}{% endlanguage %}"""
         )
         self.assertEqual(
-            tpl.render(ctx).strip().split(), ["/vertaald/", "/traduzidos/"]
+            tpl.render(ctx).strip().split(),
+            ["/vertaald/", "/traduzidos/"],
         )
 
     def test_args(self):

@@ -323,6 +323,7 @@ class Distance(MeasureBase):
         "Yard (Indian)": "indian_yd",
         "Yard (Sears)": "sears_yd",
     }
+
     LALIAS = {k.lower(): v for k, v in ALIAS.items()}
 
     def __mul__(self, other):

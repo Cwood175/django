@@ -97,7 +97,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
     def get_table_description(self, cursor, table_name):
         """
         Return a description of the table with the DB-API cursor.description
-        interface."
+        interface.
         """
         json_constraints = {}
         if (

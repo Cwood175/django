@@ -1022,7 +1022,10 @@ class TestSerialization(PostgreSQLSimpleTestCase):
 
 
 class TestStringSerialization(PostgreSQLSimpleTestCase):
-    field_values = [["Django", "Python", None], ["Джанго", "פייתון", None, "król"]]
+    field_values = [
+        ["Django", "Python", None],
+        ["Джанго", "פייתון", None, "król"],
+    ]
 
     @staticmethod
     def create_json_data(array_field_value):

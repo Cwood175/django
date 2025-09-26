@@ -260,12 +260,13 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         table_name = table_name.upper()
         cursor.execute(
             """
-    SELECT ca.column_name, cb.table_name, cb.column_name
-    FROM   user_constraints, USER_CONS_COLUMNS ca, USER_CONS_COLUMNS cb
-    WHERE  user_constraints.table_name = %s AND
-           user_constraints.constraint_name = ca.constraint_name AND
-           user_constraints.r_constraint_name = cb.constraint_name AND
-           ca.position = cb.position""",
+            SELECT ca.column_name, cb.table_name, cb.column_name
+            FROM   user_constraints, USER_CONS_COLUMNS ca, USER_CONS_COLUMNS cb
+            WHERE  user_constraints.table_name = %s AND
+                   user_constraints.constraint_name = ca.constraint_name AND
+                   user_constraints.r_constraint_name = cb.constraint_name AND
+                   ca.position = cb.position
+            """,
             [table_name],
         )
 
