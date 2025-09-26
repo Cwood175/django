@@ -21,11 +21,15 @@ import django
 from django.core.management import call_command
 from django.db import connections
 from django.test import SimpleTestCase, TestCase
-from django.test.utils import NullTimeKeeper, TimeKeeper, iter_test_cases
+from django.test.utils import (
+    NullTimeKeeper,
+    TimeKeeper,
+    iter_test_cases,
+    setup_test_environment,
+    teardown_test_environment,
+)
 from django.test.utils import setup_databases as _setup_databases
-from django.test.utils import setup_test_environment
 from django.test.utils import teardown_databases as _teardown_databases
-from django.test.utils import teardown_test_environment
 from django.utils.datastructures import OrderedSet
 from django.utils.version import PY313
 
@@ -207,22 +211,20 @@ class RemoteTestResult(unittest.TestResult):
 
     def _print_unpicklable_subtest(self, test, subtest, pickle_exc):
         print(
-            """
+            f"""
 Subtest failed:
 
-    test: {}
- subtest: {}
+    test: {test}
+ subtest: {subtest}
 
 Unfortunately, the subtest that failed cannot be pickled, so the parallel
 test runner cannot handle it cleanly. Here is the pickling error:
 
-> {}
+> {pickle_exc}
 
 You should re-run this test with --parallel=1 to reproduce the failure
 with a cleaner failure message.
-""".format(
-                test, subtest, pickle_exc
-            )
+"""
         )
 
     def check_picklable(self, test, err):
@@ -245,11 +247,11 @@ with a cleaner failure message.
             )
             if tblib is None:
                 print(
-                    """
+                    f"""
 
-{} failed:
+{test} failed:
 
-{}
+{original_exc_txt}
 
 Unfortunately, tracebacks cannot be pickled, making it impossible for the
 parallel test runner to handle this exception cleanly.
@@ -257,30 +259,26 @@ parallel test runner to handle this exception cleanly.
 In order to see the traceback, you should install tblib:
 
     python -m pip install tblib
-""".format(
-                        test, original_exc_txt
-                    )
+"""
                 )
             else:
                 print(
-                    """
+                    f"""
 
-{} failed:
+{test} failed:
 
-{}
+{original_exc_txt}
 
 Unfortunately, the exception it raised cannot be pickled, making it impossible
 for the parallel test runner to handle it cleanly.
 
 Here's the error encountered while trying to pickle the exception:
 
-{}
+{pickle_exc_txt}
 
 You should re-run this test with the --parallel=1 option to reproduce the
 failure and get a correct traceback.
-""".format(
-                        test, original_exc_txt, pickle_exc_txt
-                    )
+"""
                 )
             raise
 
@@ -493,7 +491,6 @@ def _run_subsuite(args):
 
 def _process_setup_stub(*args):
     """Stub method to simplify run() implementation."""
-    pass
 
 
 class ParallelTestSuite(unittest.TestSuite):
@@ -661,7 +658,7 @@ class Shuffler:
         return f"{self.seed!r} ({self.seed_source})"
 
     def _hash_item(self, item, key):
-        text = "{}{}".format(self.seed, key(item))
+        text = f"{self.seed}{key(item)}"
         return self._hash_text(text)
 
     def shuffle(self, items, key):
@@ -677,10 +674,8 @@ class Shuffler:
         for item in items:
             hashed = self._hash_item(item, key)
             if hashed in hashes:
-                msg = "item {!r} has same hash {!r} as item {!r}".format(
-                    item,
-                    hashed,
-                    hashes[hashed],
+                msg = (
+                    f"item {item!r} has same hash {hashed!r} as item {hashes[hashed]!r}"
                 )
                 raise RuntimeError(msg)
             hashes[hashed] = item
@@ -848,7 +843,7 @@ class DiscoverRunner:
         parser.add_argument(
             "--timing",
             action="store_true",
-            help=("Output timings, including database set up and total run time."),
+            help="Output timings, including database set up and total run time.",
         )
         parser.add_argument(
             "-k",

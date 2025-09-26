@@ -125,18 +125,19 @@ class Envelope:
                 # A tuple was passed in.
                 if len(args[0]) == 2:
                     return self.expand_to_include(
-                        (args[0][0], args[0][1], args[0][0], args[0][1])
+                        (
+                            args[0][0],
+                            args[0][1],
+                            args[0][0],
+                            args[0][1],
+                        )
                     )
                 elif len(args[0]) == 4:
                     (minx, miny, maxx, maxy) = args[0]
-                    if minx < self._envelope.MinX:
-                        self._envelope.MinX = minx
-                    if miny < self._envelope.MinY:
-                        self._envelope.MinY = miny
-                    if maxx > self._envelope.MaxX:
-                        self._envelope.MaxX = maxx
-                    if maxy > self._envelope.MaxY:
-                        self._envelope.MaxY = maxy
+                    self._envelope.MinX = min(self._envelope.MinX, minx)
+                    self._envelope.MinY = min(self._envelope.MinY, miny)
+                    self._envelope.MaxX = max(self._envelope.MaxX, maxx)
+                    self._envelope.MaxY = max(self._envelope.MaxY, maxy)
                 else:
                     raise GDALException(
                         "Incorrect number of tuple elements (%d)." % len(args[0])

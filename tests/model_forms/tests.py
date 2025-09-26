@@ -681,8 +681,6 @@ class ModelFormBaseTest(TestCase):
             multiple parent classes).
             """
 
-            pass
-
         self.assertEqual(list(SubCategoryForm.base_fields), ["name", "slug", "url"])
 
     def test_subclassmeta_form(self):
@@ -1653,7 +1651,11 @@ class ModelFormBasicTests(TestCase):
 <option value="%d" selected>It&#x27;s a test</option>
 <option value="%d">Third test</option>
 </select></li>"""
-            % (self.c1.pk, self.c2.pk, self.c3.pk),
+            % (
+                self.c1.pk,
+                self.c2.pk,
+                self.c3.pk,
+            ),
         )
 
     def test_basic_creation(self):
@@ -1754,7 +1756,13 @@ class ModelFormBasicTests(TestCase):
                 </select>
             </div>
             """
-            % (self.w_woodward.pk, self.w_royko.pk, self.c1.pk, self.c2.pk, self.c3.pk),
+            % (
+                self.w_woodward.pk,
+                self.w_royko.pk,
+                self.c1.pk,
+                self.c2.pk,
+                self.c3.pk,
+            ),
         )
 
         # Add some categories and test the many-to-many form output.
@@ -1799,7 +1807,13 @@ class ModelFormBasicTests(TestCase):
             <option value="3">Live</option>
             </select></li>
             """
-            % (self.w_woodward.pk, self.w_royko.pk, self.c1.pk, self.c2.pk, self.c3.pk),
+            % (
+                self.w_woodward.pk,
+                self.w_royko.pk,
+                self.c1.pk,
+                self.c2.pk,
+                self.c3.pk,
+            ),
         )
 
     def test_subset_fields(self):
@@ -1974,7 +1988,13 @@ class ModelFormBasicTests(TestCase):
             '<option value="2">Pending</option>'
             '<option value="3">Live</option>'
             "</select></li>"
-            % (self.w_woodward.pk, self.w_royko.pk, self.c1.pk, self.c2.pk, self.c3.pk),
+            % (
+                self.w_woodward.pk,
+                self.w_royko.pk,
+                self.c1.pk,
+                self.c2.pk,
+                self.c3.pk,
+            ),
         )
 
         c4 = Category.objects.create(name="Fourth", url="4th")
@@ -2313,7 +2333,7 @@ class ModelMultipleChoiceFieldTests(TestCase):
                 show_hidden_initial=True, queryset=Writer.objects.all()
             )
 
-        writers = (Writer.objects.create(name=str(x)) for x in range(0, 50))
+        writers = (Writer.objects.create(name=str(x)) for x in range(50))
         writer_pks = tuple(x.pk for x in writers)
         form = WriterForm(data={"initial-persons": writer_pks})
         with self.assertNumQueries(1):
@@ -3133,15 +3153,15 @@ class OtherModelFormTests(TestCase):
         today_str = str(datetime.date.today())
         self.assertHTMLEqual(
             form.as_p(),
-            """
+            f"""
             <p><label for="id_title">Title:</label>
             <input id="id_title" maxlength="30" name="title" type="text" required>
             </p>
             <p><label for="id_date_published">Date published:</label>
-            <input id="id_date_published" name="date_published" type="text" value="{0}"
+            <input id="id_date_published" name="date_published" type="text" value="{today_str}"
                 required>
             <input id="initial-id_date_published" name="initial-date_published"
-                type="hidden" value="{0}">
+                type="hidden" value="{today_str}">
             </p>
             <p><label for="id_mode">Mode:</label> <select id="id_mode" name="mode">
             <option value="di" selected>direct</option>
@@ -3156,9 +3176,7 @@ class OtherModelFormTests(TestCase):
             <option value="3" selected>Novel</option></select>
             <input id="initial-id_category" name="initial-category" type="hidden"
                 value="3">
-            """.format(
-                today_str
-            ),
+            """,
         )
         empty_data = {
             "title": "",

@@ -250,7 +250,8 @@ class FormsModelTestCase(TestCase):
     def test_unicode_filename(self):
         # FileModel with Unicode filename and data.
         file1 = SimpleUploadedFile(
-            "我隻氣墊船裝滿晒鱔.txt", "मेरी मँडराने वाली नाव सर्पमीनों से भरी ह".encode()
+            "我隻氣墊船裝滿晒鱔.txt",
+            "मेरी मँडराने वाली नाव सर्पमीनों से भरी ह".encode(),
         )
         f = FileForm(data={}, files={"file1": file1}, auto_id=False)
         self.assertTrue(f.is_valid())
@@ -450,9 +451,7 @@ class EmptyLabelTestCase(TestCase):
                 self.assertTrue(f.is_valid())
                 m = f.save()
                 self.assertEqual(expected, getattr(m, key))
-                self.assertEqual(
-                    "No Preference", getattr(m, "get_{}_display".format(key))()
-                )
+                self.assertEqual("No Preference", getattr(m, f"get_{key}_display")())
 
     def test_empty_field_integer(self):
         f = EmptyIntegerLabelChoiceForm()

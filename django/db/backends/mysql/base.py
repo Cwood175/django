@@ -44,7 +44,7 @@ if version < (2, 2, 1):
 # expects time.
 django_conversions = {
     **conversions,
-    **{FIELD_TYPE.TIME: backend_utils.typecast_time},
+    FIELD_TYPE.TIME: backend_utils.typecast_time,
 }
 
 # This should match the numerical portion of the version numbers (we can treat
@@ -409,7 +409,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
                        @@sql_auto_is_null,
                        @@lower_case_table_names,
                        CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC') IS NOT NULL
-            """
+                """
             )
             row = cursor.fetchone()
         return {

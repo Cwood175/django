@@ -51,9 +51,7 @@ class HTTPSitemapTests(SitemapTestsBase):
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <sitemap><loc>{0}/simple/sitemap-simple.xml</loc><lastmod>{1}</lastmod></sitemap><sitemap><loc>{0}/simple/sitemap-simple.xml?p=2</loc><lastmod>{1}</lastmod></sitemap>
 </sitemapindex>
-""".format(
-            self.base_url, date.today()
-        )
+""".format(self.base_url, date.today())
         self.assertXMLEqual(response.text, expected_content)
 
     @override_settings(
@@ -341,11 +339,11 @@ class HTTPSitemapTests(SitemapTestsBase):
             '<?xml version="1.0" encoding="UTF-8"?>\n'
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
             'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
-            "<url><loc>{0}/en/i18n/testmodel/{1}/</loc><changefreq>never</changefreq>"
-            "<priority>0.5</priority></url><url><loc>{0}/pt/i18n/testmodel/{1}/</loc>"
+            f"<url><loc>{self.base_url}/en/i18n/testmodel/{self.i18n_model.pk}/</loc><changefreq>never</changefreq>"
+            f"<priority>0.5</priority></url><url><loc>{self.base_url}/pt/i18n/testmodel/{self.i18n_model.pk}/</loc>"
             "<changefreq>never</changefreq><priority>0.5</priority></url>\n"
             "</urlset>"
-        ).format(self.base_url, self.i18n_model.pk)
+        )
         self.assertXMLEqual(response.text, expected_content)
 
     @override_settings(LANGUAGES=(("en", "English"), ("pt", "Portuguese")))
@@ -364,9 +362,7 @@ class HTTPSitemapTests(SitemapTestsBase):
 <xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
 <xhtml:link rel="alternate" hreflang="pt" href="{url}/pt/i18n/testmodel/{pk}/"/>
 </url>
-""".replace(
-            "\n", ""
-        )
+""".replace("\n", "")
         expected_content = (
             f'<?xml version="1.0" encoding="UTF-8"?>\n'
             f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
@@ -394,9 +390,7 @@ class HTTPSitemapTests(SitemapTestsBase):
 <xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
 <xhtml:link rel="alternate" hreflang="es" href="{url}/es/i18n/testmodel/{pk}/"/>
 </url>
-""".replace(
-            "\n", ""
-        )
+""".replace("\n", "")
         expected_content = (
             f'<?xml version="1.0" encoding="UTF-8"?>\n'
             f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
@@ -424,9 +418,7 @@ class HTTPSitemapTests(SitemapTestsBase):
 <xhtml:link rel="alternate" hreflang="pt" href="{url}/pt/i18n/testmodel/{pk}/"/>
 <xhtml:link rel="alternate" hreflang="x-default" href="{url}/i18n/testmodel/{pk}/"/>
 </url>
-""".replace(
-            "\n", ""
-        )
+""".replace("\n", "")
         expected_content = (
             f'<?xml version="1.0" encoding="UTF-8"?>\n'
             f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '

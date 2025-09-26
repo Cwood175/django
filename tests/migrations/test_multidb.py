@@ -109,12 +109,10 @@ class MultiDBOperationTests(OperationTestBase):
         with override_settings(DATABASE_ROUTERS=[MigrateEverythingRouter()]):
             project_state = self.set_up_test_model(app_label)
 
-        sql = """
-        INSERT INTO {0}_pony (pink, weight) VALUES (1, 3.55);
-        INSERT INTO {0}_pony (pink, weight) VALUES (3, 5.0);
-        """.format(
-            app_label
-        )
+        sql = f"""
+        INSERT INTO {app_label}_pony (pink, weight) VALUES (1, 3.55);
+        INSERT INTO {app_label}_pony (pink, weight) VALUES (3, 5.0);
+        """
 
         operation = migrations.RunSQL(sql, hints=hints or {})
         # Test the state alteration does nothing

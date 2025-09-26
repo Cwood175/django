@@ -81,7 +81,6 @@ class ExtraValidationFormMixin:
 
 
 class BaseUserCreationFormTest(TestDataMixin, TestCase):
-
     form_class = BaseUserCreationForm
 
     def test_form_fields(self):
@@ -352,7 +351,6 @@ class BaseUserCreationFormTest(TestDataMixin, TestCase):
 
 
 class CustomUserCreationFormTest(TestDataMixin, TestCase):
-
     def test_custom_form(self):
         class CustomUserCreationForm(BaseUserCreationForm):
             class Meta(BaseUserCreationForm.Meta):
@@ -431,7 +429,6 @@ class CustomUserCreationFormTest(TestDataMixin, TestCase):
 
 
 class UserCreationFormTest(BaseUserCreationFormTest):
-
     form_class = UserCreationForm
 
     def test_case_insensitive_username(self):
@@ -1014,9 +1011,9 @@ class UserChangeFormTest(TestDataMixin, TestCase):
         class MyUserForm(UserChangeForm):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
-                self.fields["groups"].help_text = (
-                    "These groups give users different permissions"
-                )
+                self.fields[
+                    "groups"
+                ].help_text = "These groups give users different permissions"
 
             class Meta(UserChangeForm.Meta):
                 fields = ("groups",)
@@ -1231,7 +1228,7 @@ class PasswordResetFormTest(TestDataMixin, TestCase):
         self.assertEqual(len(mail.outbox), 0)
 
     def test_cleaned_data(self):
-        (user, username, email) = self.create_dummy_user()
+        user, username, email = self.create_dummy_user()
         data = {"email": email}
         form = PasswordResetForm(data)
         self.assertTrue(form.is_valid())
@@ -1649,7 +1646,6 @@ class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
 
 
 class AdminUserCreationFormTest(BaseUserCreationFormTest):
-
     form_class = AdminUserCreationForm
 
     def test_form_fields(self):

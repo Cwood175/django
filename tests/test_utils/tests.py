@@ -413,9 +413,8 @@ class CaptureQueriesContextManagerTests(TestCase):
         self.assertEqual(2, len(captured_queries))
 
     def test_failure(self):
-        with self.assertRaises(TypeError):
-            with CaptureQueriesContext(connection):
-                raise TypeError
+        with self.assertRaises(TypeError), CaptureQueriesContext(connection):
+            raise TypeError
 
     def test_with_client(self):
         with CaptureQueriesContext(connection) as captured_queries:
@@ -468,9 +467,8 @@ class AssertNumQueriesContextManagerTests(TestCase):
             with self.assertNumQueries(2):
                 Person.objects.count()
 
-        with self.assertRaises(TypeError):
-            with self.assertNumQueries(4000):
-                raise TypeError
+        with self.assertRaises(TypeError), self.assertNumQueries(4000):
+            raise TypeError
 
     def test_with_client(self):
         with self.assertNumQueries(1):
@@ -863,7 +861,7 @@ class HTMLEqualTests(SimpleTestCase):
 <tr><th><label for="id_last_name">Last name:</label></th>
 <td><input type="text" id="id_last_name" name="last_name" value="Lennon" /></td></tr>
 <tr><th><label for="id_birthday">Birthday:</label></th>
-<td><input type="text" value="1940-10-9" name="birthday" id="id_birthday" /></td></tr>""",  # NOQA
+<td><input type="text" value="1940-10-9" name="birthday" id="id_birthday" /></td></tr>""",
             """
         <tr><th>
             <label for="id_first_name">First name:</label></th><td>
@@ -1124,8 +1122,7 @@ class InHTMLTests(SimpleTestCase):
         haystack = "<p><b>Hello</b> <span>there</span>! Hi <span>there</span>!</p>"
         self.assertNotInHTML("<b>Hi</b>", haystack=haystack)
         msg = (
-            "'<b>Hello</b>' unexpectedly found in the following response"
-            f"\n{haystack!r}"
+            f"'<b>Hello</b>' unexpectedly found in the following response\n{haystack!r}"
         )
         with self.assertRaisesMessage(AssertionError, msg):
             self.assertNotInHTML("<b>Hello</b>", haystack=haystack)
@@ -1219,13 +1216,11 @@ class XMLEqualTests(SimpleTestCase):
         xml1 = "<elem attr1='a' />"
         xml2 = "<elem attr2='b' attr1='a' />"
 
-        msg = """{xml1} != {xml2}
+        msg = f"""{xml1!r} != {xml2!r}
 - <elem attr1='a' />
 + <elem attr2='b' attr1='a' />
 ?      ++++++++++
-""".format(
-            xml1=repr(xml1), xml2=repr(xml2)
-        )
+"""
 
         with self.assertRaisesMessage(AssertionError, msg):
             self.assertXMLEqual(xml1, xml2)
@@ -1269,12 +1264,10 @@ class XMLEqualTests(SimpleTestCase):
 
     def test_processing_instruction(self):
         xml1 = (
-            '<?xml version="1.0"?>'
-            '<?xml-model href="http://www.example1.com"?><root />'
+            '<?xml version="1.0"?><?xml-model href="http://www.example1.com"?><root />'
         )
         xml2 = (
-            '<?xml version="1.0"?>'
-            '<?xml-model href="http://www.example2.com"?><root />'
+            '<?xml version="1.0"?><?xml-model href="http://www.example2.com"?><root />'
         )
         self.assertXMLEqual(xml1, xml2)
         self.assertXMLEqual(

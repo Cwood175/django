@@ -7,10 +7,9 @@ import shutil
 import socket
 import sys
 import tempfile
-from datetime import datetime, timezone
-from email import message_from_binary_file
+from datetime import UTC, datetime
+from email import message_from_binary_file, policy
 from email import message_from_bytes as _message_from_bytes
-from email import policy
 from email.headerregistry import Address
 from email.message import EmailMessage as PyEmailMessage
 from email.message import Message as PyMessage
@@ -529,7 +528,7 @@ class MailTests(MailTestsMixin, SimpleTestCase):
         so that it uses the email header date format.
         """
         email = EmailMessage(
-            headers={"Date": datetime(2001, 11, 9, 1, 8, 47, tzinfo=timezone.utc)},
+            headers={"Date": datetime(2001, 11, 9, 1, 8, 47, tzinfo=UTC)},
         )
         message = email.message()
         self.assertEqual(message["Date"], "Fri, 09 Nov 2001 01:08:47 +0000")
@@ -1089,12 +1088,12 @@ class MailTests(MailTestsMixin, SimpleTestCase):
         """
         attachment = dedent(
             """\
-            Subject: A message using 8bit CTE
-            Content-Type: text/plain; charset=utf-8
-            Content-Transfer-Encoding: 8bit
+                Subject: A message using 8bit CTE
+                Content-Type: text/plain; charset=utf-8
+                Content-Transfer-Encoding: 8bit
 
-            ¡8-bit content!
-            """
+                ¡8-bit content!
+                """
         ).encode()
         email = EmailMessage()
         email.attach("attachment.eml", attachment, "message/rfc822")
@@ -2004,7 +2003,6 @@ class MailTests(MailTestsMixin, SimpleTestCase):
 
 # RemovedInDjango70Warning.
 class MailDeprecatedPositionalArgsTests(SimpleTestCase):
-
     def assertDeprecatedIn70(self, params, name):
         return self.assertWarnsMessage(
             RemovedInDjango70Warning,
@@ -2848,11 +2846,13 @@ class SMTPBackendTests(BaseEmailBackendTests, SMTPBackendTestsBase):
         backend = smtp.EmailBackend(
             username="not empty username", password="not empty password"
         )
-        with self.assertRaisesMessage(
-            SMTPException, "SMTP AUTH extension not supported by server."
+        with (
+            self.assertRaisesMessage(
+                SMTPException, "SMTP AUTH extension not supported by server."
+            ),
+            backend,
         ):
-            with backend:
-                pass
+            pass
 
     def test_server_open(self):
         """
@@ -2938,19 +2938,20 @@ class SMTPBackendTests(BaseEmailBackendTests, SMTPBackendTestsBase):
     def test_email_tls_attempts_starttls(self):
         backend = smtp.EmailBackend()
         self.assertTrue(backend.use_tls)
-        with self.assertRaisesMessage(
-            SMTPException, "STARTTLS extension not supported by server."
+        with (
+            self.assertRaisesMessage(
+                SMTPException, "STARTTLS extension not supported by server."
+            ),
+            backend,
         ):
-            with backend:
-                pass
+            pass
 
     @override_settings(EMAIL_USE_SSL=True)
     def test_email_ssl_attempts_ssl_connection(self):
         backend = smtp.EmailBackend()
         self.assertTrue(backend.use_ssl)
-        with self.assertRaises(SSLError):
-            with backend:
-                pass
+        with self.assertRaises(SSLError), backend:
+            pass
 
     def test_connection_timeout_default(self):
         """The connection's timeout value is None by default."""

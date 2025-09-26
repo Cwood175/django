@@ -400,7 +400,8 @@ class ModelChoiceFieldTests(TestCase):
             <input type="checkbox" name="name" value="%d" data-slug="test">A test
             </label></div>
             <div><label>
-            <input type="checkbox" name="name" value="%d" data-slug="third-test">Third
+            <input type="checkbox" name="name" value="%d"
+                data-slug="third-test">Third
             </label></div></div>
             """
             % (self.c1.pk, self.c2.pk, self.c3.pk),

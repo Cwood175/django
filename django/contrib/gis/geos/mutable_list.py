@@ -8,6 +8,7 @@ See also http://static.aryehleib.com/oldsite/MutableLists.html
 
 Author: Aryeh Leib Taurog.
 """
+
 from functools import total_ordering
 
 
@@ -178,7 +179,7 @@ class ListMixin:
 
     def index(self, val):
         "Standard list index method"
-        for i in range(0, len(self)):
+        for i in range(len(self)):
             if self[i] == val:
                 return i
         raise ValueError("%s not found in object" % val)
