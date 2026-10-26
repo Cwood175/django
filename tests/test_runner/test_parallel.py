@@ -235,7 +235,8 @@ class ParallelTestSuiteTest(SimpleTestCase):
         actual_test, tb_and_details_str = result.errors[0]
         self.assertIsInstance(actual_test, _ErrorHolder)
         self.assertEqual(
-            actual_test.id(), "setUpClass (test_runner.test_parallel.SampleErrorTest)"
+            actual_test.id(),
+            "setUpClass (test_runner.test_parallel.SampleErrorTest)",
         )
         self.assertIn("Traceback (most recent call last):", tb_and_details_str)
         self.assertIn("ValueError: woops", tb_and_details_str)

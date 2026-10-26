@@ -77,17 +77,17 @@ class Envelope:
         """
         if isinstance(other, Envelope):
             return (
-                (self.min_x == other.min_x)
-                and (self.min_y == other.min_y)
-                and (self.max_x == other.max_x)
-                and (self.max_y == other.max_y)
+                self.min_x == other.min_x
+                and self.min_y == other.min_y
+                and self.max_x == other.max_x
+                and self.max_y == other.max_y
             )
         elif isinstance(other, tuple) and len(other) == 4:
             return (
-                (self.min_x == other[0])
-                and (self.min_y == other[1])
-                and (self.max_x == other[2])
-                and (self.max_y == other[3])
+                self.min_x == other[0]
+                and self.min_y == other[1]
+                and self.max_x == other[2]
+                and self.max_y == other[3]
             )
         else:
             raise GDALException("Equivalence testing only works with other Envelopes.")
@@ -128,15 +128,11 @@ class Envelope:
                         (args[0][0], args[0][1], args[0][0], args[0][1])
                     )
                 elif len(args[0]) == 4:
-                    (minx, miny, maxx, maxy) = args[0]
-                    if minx < self._envelope.MinX:
-                        self._envelope.MinX = minx
-                    if miny < self._envelope.MinY:
-                        self._envelope.MinY = miny
-                    if maxx > self._envelope.MaxX:
-                        self._envelope.MaxX = maxx
-                    if maxy > self._envelope.MaxY:
-                        self._envelope.MaxY = maxy
+                    minx, miny, maxx, maxy = args[0]
+                    self._envelope.MinX = min(self._envelope.MinX, minx)
+                    self._envelope.MinY = min(self._envelope.MinY, miny)
+                    self._envelope.MaxX = max(self._envelope.MaxX, maxx)
+                    self._envelope.MaxY = max(self._envelope.MaxY, maxy)
                 else:
                     raise GDALException(
                         "Incorrect number of tuple elements (%d)." % len(args[0])

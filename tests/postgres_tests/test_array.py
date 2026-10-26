@@ -1518,22 +1518,22 @@ class TestSplitFormWidget(PostgreSQLWidgetTestCase):
             "array",
             ["val1", "val2"],
             attrs={"id": "foo"},
-            html=(
-                """
+            html="""
                 <input id="foo_0" name="array_0" type="text" value="val1">
                 <input id="foo_1" name="array_1" type="text" value="val2">
-                """
-            ),
+                """,
         )
 
     def test_value_omitted_from_data(self):
         widget = SplitArrayWidget(forms.TextInput(), size=2)
         self.assertIs(widget.value_omitted_from_data({}, {}, "field"), True)
         self.assertIs(
-            widget.value_omitted_from_data({"field_0": "value"}, {}, "field"), False
+            widget.value_omitted_from_data({"field_0": "value"}, {}, "field"),
+            False,
         )
         self.assertIs(
-            widget.value_omitted_from_data({"field_1": "value"}, {}, "field"), False
+            widget.value_omitted_from_data({"field_1": "value"}, {}, "field"),
+            False,
         )
         self.assertIs(
             widget.value_omitted_from_data(

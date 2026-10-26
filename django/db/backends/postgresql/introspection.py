@@ -42,8 +42,7 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
         field_type = super().get_field_type(data_type, description)
         if description.is_autofield or (
             # Required for pre-Django 4.1 serial columns.
-            description.default
-            and "nextval" in description.default
+            description.default and "nextval" in description.default
         ):
             if field_type == "IntegerField":
                 return "AutoField"
@@ -278,10 +277,9 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
             if index not in constraints:
                 basic_index = (
                     type_ == self.index_default_access_method
-                    and
                     # '_btree' references
                     # django.contrib.postgres.indexes.BTreeIndex.suffix.
-                    not index.endswith("_btree")
+                    and not index.endswith("_btree")
                     and options is None
                 )
                 constraints[index] = {
